@@ -1,0 +1,23 @@
+{
+  "name": "coding-interview-platform",
+  "version": "1.0.0",
+  "private": true,
+  "description": "End-to-end coding interview platform",
+  "scripts": {
+    "dev": "concurrently \"npm run server:dev\" \"npm run client:dev\"",
+    "server:dev": "npm run dev --workspace=server",
+    "client:dev": "npm run dev --workspace=client",
+    "build": "npm run build --workspaces",
+    "test": "npm test --workspaces",
+    "test:e2e": "playwright test",
+    "install:all": "npm install && npm install --workspaces"
+  },
+  "workspaces": [
+    "client",
+    "server"
+  ],
+  "devDependencies": {
+    "@playwright/test": "^1.57.0",
+    "concurrently": "^8.2.0"
+  }
+}
