@@ -12,6 +12,19 @@ A real-time collaborative coding interview platform supporting JavaScript and Py
 
 ## Getting Started
 
+### Deployment
+
+### Deploy to Render
+The project includes a `render.yaml` Blueprint for easy deployment.
+
+1. Push this repository to GitHub.
+2. Log in to [Render](https://render.com).
+3. Click **New +** -> **Blueprint**.
+4. Connect your GitHub repository.
+5. Render will automatically detect the `render.yaml`, build the Docker image, and deploy your app.
+
+> **Note**: This project uses an **in-memory session store**. Do not scale beyond 1 instance, or users on different server instances won't be able to collaborate.
+
 ### Prerequisites
 - Node.js 18+
 - Docker (optional)
