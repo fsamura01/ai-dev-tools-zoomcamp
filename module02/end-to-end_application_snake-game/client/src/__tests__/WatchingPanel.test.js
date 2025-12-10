@@ -43,9 +43,8 @@ describe("WatchingPanel Component", () => {
     // Check if all players are displayed
     mockWatchingPlayers.forEach((player) => {
       expect(screen.getByText(player.username)).toBeInTheDocument();
-      expect(
-        screen.getByText(`Watching: ${player.watching}`)
-      ).toBeInTheDocument();
+      const playerItem = screen.getByText(player.username).closest(".watching-item");
+      expect(playerItem).toHaveTextContent(new RegExp(`Watching:\\s*${player.watching}`, 'i'));
     });
   });
 

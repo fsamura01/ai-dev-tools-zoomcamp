@@ -240,6 +240,8 @@ const GameBoard = ({ gameMode }) => {
 
       <div
         className="game-board"
+        role="grid"
+        aria-label=""
         style={{
           gridTemplateColumns: `repeat(${BOARD_SIZE}, 1fr)`,
           gridTemplateRows: `repeat(${BOARD_SIZE}, 1fr)`,
@@ -249,7 +251,7 @@ const GameBoard = ({ gameMode }) => {
           const x = index % BOARD_SIZE;
           const y = Math.floor(index / BOARD_SIZE);
           return (
-            <div key={index} className="cell">
+            <div key={index} className="cell" role="gridcell">
               {renderCell(x, y)}
             </div>
           );

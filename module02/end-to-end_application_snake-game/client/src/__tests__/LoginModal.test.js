@@ -26,11 +26,11 @@ describe("LoginModal Component", () => {
     renderLoginModal();
 
     // Check if modal header is correct
-    expect(screen.getByText(/Login/i)).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /Login/i })).toBeInTheDocument();
 
     // Check if login fields are present
     expect(screen.getByLabelText(/Email/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/Password/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/^Password$/i)).toBeInTheDocument();
 
     // Check if signup fields are not present
     expect(screen.queryByLabelText(/Username/i)).not.toBeInTheDocument();
@@ -47,12 +47,12 @@ describe("LoginModal Component", () => {
     fireEvent.click(toggleButton);
 
     // Check if modal header changed
-    expect(screen.getByText(/Sign Up/i)).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /Sign Up/i })).toBeInTheDocument();
 
     // Check if signup fields are now present
     expect(screen.getByLabelText(/Username/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/Email/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/Password/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/^Password$/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/Confirm Password/i)).toBeInTheDocument();
   });
 
@@ -68,7 +68,7 @@ describe("LoginModal Component", () => {
     fireEvent.click(loginToggle);
 
     // Check if we're back to login form
-    expect(screen.getByText(/Login/i)).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /Login/i })).toBeInTheDocument();
     expect(screen.queryByLabelText(/Username/i)).not.toBeInTheDocument();
     expect(
       screen.queryByLabelText(/Confirm Password/i)
@@ -82,12 +82,12 @@ describe("LoginModal Component", () => {
     fireEvent.change(screen.getByLabelText(/Email/i), {
       target: { value: "test@example.com" },
     });
-    fireEvent.change(screen.getByLabelText(/Password/i), {
+    fireEvent.change(screen.getByLabelText(/^Password$/i), {
       target: { value: "password123" },
     });
 
     // Submit form
-    const loginButton = screen.getByText(/Login/i);
+    const loginButton = screen.getByRole('button', { name: /Login/i });
     fireEvent.click(loginButton);
 
     // Verify onLogin was called with correct data
@@ -101,7 +101,7 @@ describe("LoginModal Component", () => {
     renderLoginModal();
 
     // Submit empty form
-    const loginButton = screen.getByText(/Login/i);
+    const loginButton = screen.getByRole('button', { name: /Login/i });
     fireEvent.click(loginButton);
 
     // Check for error message
@@ -124,7 +124,7 @@ describe("LoginModal Component", () => {
     fireEvent.change(screen.getByLabelText(/Email/i), {
       target: { value: "test@example.com" },
     });
-    fireEvent.change(screen.getByLabelText(/Password/i), {
+    fireEvent.change(screen.getByLabelText(/^Password$/i), {
       target: { value: "password123" },
     });
     fireEvent.change(screen.getByLabelText(/Confirm Password/i), {
@@ -132,7 +132,7 @@ describe("LoginModal Component", () => {
     });
 
     // Submit form
-    const signupButton = screen.getByText(/Sign Up/i);
+    const signupButton = screen.getByRole('button', { name: /Sign Up/i });
     fireEvent.click(signupButton);
 
     // Verify onSignup was called with correct data
@@ -157,7 +157,7 @@ describe("LoginModal Component", () => {
     fireEvent.change(screen.getByLabelText(/Email/i), {
       target: { value: "test@example.com" },
     });
-    fireEvent.change(screen.getByLabelText(/Password/i), {
+    fireEvent.change(screen.getByLabelText(/^Password$/i), {
       target: { value: "password123" },
     });
     fireEvent.change(screen.getByLabelText(/Confirm Password/i), {
@@ -165,7 +165,7 @@ describe("LoginModal Component", () => {
     });
 
     // Submit form
-    const signupButton = screen.getByText(/Sign Up/i);
+    const signupButton = screen.getByRole('button', { name: /Sign Up/i });
     fireEvent.click(signupButton);
 
     // Check for error message

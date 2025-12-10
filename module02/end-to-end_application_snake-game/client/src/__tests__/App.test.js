@@ -91,9 +91,9 @@ describe("App Component", () => {
     expect(screen.getByText(/Game Board/i)).toBeInTheDocument();
 
     // Check if side panels are rendered
-    expect(screen.getByText(/Leaderboard \(2 players\)/i)).toBeInTheDocument();
+    expect(await screen.findByText(/Leaderboard \(2 players\)/i)).toBeInTheDocument();
     expect(
-      screen.getByText(/Watching Panel \(2 players\)/i)
+      await screen.findByText(/Watching Panel \(2 players\)/i)
     ).toBeInTheDocument();
   });
 
@@ -152,9 +152,9 @@ describe("App Component", () => {
     const loginButton = screen.getByText(/Login \/ Signup/i);
     fireEvent.click(loginButton);
 
-    // Switch to signup
-    const signupToggle = screen.getByText(/Sign Up/i);
-    fireEvent.click(signupToggle);
+    // Switch to signup - REMOVED as mock exposes button directly
+    // const signupToggle = screen.getByText(/Sign Up/i);
+    // fireEvent.click(signupToggle);
 
     // Perform signup
     const testSignupButton = screen.getByText(/Test Signup/i);

@@ -61,7 +61,7 @@ const LoginModal = ({ onClose, onLogin, onSignup }) => {
 
   return (
     <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+      <div className="modal-content" onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true">
         <div className="modal-header">
           <h2>{isLogin ? 'Login' : 'Sign Up'}</h2>
           <button className="close-button" onClick={onClose}>×</button>
