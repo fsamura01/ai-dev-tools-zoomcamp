@@ -69,4 +69,27 @@ test.describe('Coding Interview Platform', () => {
     await contextA.close();
     await contextB.close();
   });
+
+  test('should execute code and show output', async ({ page }) => {
+    await waitForServer(page);
+    await page.goto('/');
+    await page.click('text=Create New Session');
+    
+    // Switch to Python
+    await page.selectOption('.lang-select', 'python');
+    
+    // Type some code
+    // We use the same click-focus strategy
+    await page.click('.monaco-editor'); 
+    await page.waitForTimeout(500);
+    await page.keyboard.press('Control+A');
+    await page.keyboard.press('Backspace');
+    await page.keyboard.type('print("Hello World")', { delay: 100 });
+    
+    // Run code
+    await page.click('.run-btn');
+    
+    // Verify output
+    await expect(page.locator('.output-panel pre')).toContainText('Hello World');
+  });
 });
