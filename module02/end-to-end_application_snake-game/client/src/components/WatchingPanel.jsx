@@ -1,16 +1,31 @@
-import { useState } from 'react';
-import './WatchingPanel.css';
+import { useEffect, useState } from 'react';
+import { useAuth } from '../contexts/AuthContext';
 import { mockApi } from '../services/api';
+import './WatchingPanel.css';
 
 const WatchingPanel = ({ players }) => {
+  const { currentUser } = useAuth();
+  // players prop is initial data, but we might want to refresh it
   const [watchingList, setWatchingList] = useState(players || []);
 
+  useEffect(() => {
+    setWatchingList(players || []);
+  }, [players]);
+
   const handleWatchToggle = async (playerId) => {
+    if (!currentUser) {
+      alert("Please login to watch players.");
+      return;
+    }
+
     try {
       const updatedPlayer = watchingList.find(p => p.id === playerId);
       if (updatedPlayer) {
         if (updatedPlayer.isLive) {
           // Stop watching
+          // Backend expects target player ID to stop watching? 
+          // Endpoint: /watching/{playerId}/stop
+          // My note in controller: "Assume playerId is target ID".
           await mockApi.stopWatching(playerId);
           updatedPlayer.isLive = false;
         } else {
@@ -18,10 +33,12 @@ const WatchingPanel = ({ players }) => {
           await mockApi.startWatching(playerId);
           updatedPlayer.isLive = true;
         }
+        // Force update UI
         setWatchingList([...watchingList]);
       }
     } catch (error) {
       console.error('Failed to toggle watching status:', error);
+      alert('Action failed: ' + error.message);
     }
   };
 
@@ -52,11 +69,11 @@ const WatchingPanel = ({ players }) => {
             </div>
           ))
         ) : (
-          <div className="no-data">No players to watch</div>
+          <div className="no-data">No active players found</div>
         )}
       </div>
       <div className="watching-note">
-        <p>Note: In this demo, other players are simulated. In a real application, you would watch actual live games.</p>
+        <p>Note: Real-time watching requires WebSocket implementation. This is a simulation.</p>
       </div>
     </div>
   );

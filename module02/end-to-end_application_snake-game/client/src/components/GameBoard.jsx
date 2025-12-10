@@ -188,7 +188,11 @@ const GameBoard = ({ gameMode }) => {
 
   // End game and submit score
   const endGame = async () => {
-    if (!currentUser) return;
+    if (!currentUser) {
+        console.log("Game over! Log in to save your score.");
+        // We could also show a modal or alert here
+        return;
+    }
 
     try {
       await mockApi.submitScore({
@@ -199,8 +203,12 @@ const GameBoard = ({ gameMode }) => {
         endedAt: new Date().toISOString(),
       });
 
-      // Update leaderboard
-      await mockApi.updateLeaderboard({ userId: currentUser.id, score });
+      // Update leaderboard (optional auto-refresh or notify parent)
+      // Since Leaderboard is not a child of GameBoard, we can't easily force refresh unless we hoist state up.
+      // For MVP, we'll just submit. The user can refresh page to see new leaderboard.
+      // await mockApi.updateLeaderboard({ userId: currentUser.id, score }); 
+      // Note: server updateLeaderboard endpoint actually just inserts into scores or recalculates? 
+      // My server implementation for updateLeaderboard mainly inserts a score too.
     } catch (error) {
       console.error("Failed to submit score:", error);
     }

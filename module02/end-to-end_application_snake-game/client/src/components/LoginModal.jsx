@@ -1,7 +1,9 @@
 import { useState } from 'react';
+import { useAuth } from '../contexts/AuthContext';
 import './LoginModal.css';
 
-const LoginModal = ({ onClose, onLogin, onSignup }) => {
+const LoginModal = ({ onClose }) => {
+  const { login, signup } = useAuth();
   const [isLogin, setIsLogin] = useState(true);
   const [formData, setFormData] = useState({
     username: '',
@@ -23,19 +25,26 @@ const LoginModal = ({ onClose, onLogin, onSignup }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
     
     try {
       if (isLogin) {
         // Validate login form
-        if (!formData.email || !formData.password) {
-          setError('Please fill in all fields');
+        if (!formData.email && !formData.username) {
+             setError('Please provide email or username');
+             return;
+        }
+        if (!formData.password) {
+          setError('Please provide password');
           return;
         }
         
-        await onLogin({
-          email: formData.email,
+        await login({
+          email: formData.email, // Backend accepts both, logic handles it
+          username: formData.username,
           password: formData.password
         });
+        onClose(); // Close modal on success
       } else {
         // Validate signup form
         if (!formData.username || !formData.email || !formData.password) {
@@ -48,11 +57,25 @@ const LoginModal = ({ onClose, onLogin, onSignup }) => {
           return;
         }
         
-        await onSignup({
+        const user = await signup({
           username: formData.username,
           email: formData.email,
           password: formData.password
         });
+        
+        // After signup, we might need to login or we are just registered
+        // Implementation in AuthContext returns user.
+        // Let's assume user needs to login now from UX perspective or auto-login.
+        // For simplicity, let's just close modal if we want, or switch to login?
+        // Let's try to auto-login using the credentials we just used
+        try {
+             await login({ username: formData.username, password: formData.password });
+             onClose();
+        } catch(loginErr) {
+             // If auto-login fails, switch to login tab and ask user to login
+             setIsLogin(true);
+             setError('Signup successful! Please login.');
+        }
       }
     } catch (err) {
       setError(err.message || 'An error occurred');
@@ -68,20 +91,19 @@ const LoginModal = ({ onClose, onLogin, onSignup }) => {
         </div>
         
         <form onSubmit={handleSubmit} className="auth-form">
-          {!isLogin && (
-            <div className="form-group">
-              <label htmlFor="username">Username</label>
-              <input
-                type="text"
-                id="username"
-                name="username"
-                value={formData.username}
-                onChange={handleChange}
-                placeholder="Enter your username"
-              />
-            </div>
-          )}
+          <div className="form-group">
+            <label htmlFor="username">Username {isLogin && '(or Email)'}</label>
+            <input
+              type="text"
+              id="username"
+              name="username"
+              value={formData.username}
+              onChange={handleChange}
+              placeholder={isLogin ? "Enter username or email" : "Enter your username"}
+            />
+          </div>
           
+          {!isLogin && (
           <div className="form-group">
             <label htmlFor="email">Email</label>
             <input
@@ -93,6 +115,7 @@ const LoginModal = ({ onClose, onLogin, onSignup }) => {
               placeholder="Enter your email"
             />
           </div>
+          )}
           
           <div className="form-group">
             <label htmlFor="password">Password</label>

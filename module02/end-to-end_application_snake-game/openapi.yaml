@@ -1,0 +1,417 @@
+openapi: 3.0.0
+info:
+  title: Snake Game API
+  description: Backend API for the multiplayer Snake Game application.
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000/api
+    description: Local development server
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        username:
+          type: string
+          example: "player1"
+        email:
+          type: string
+          format: email
+          example: "player1@example.com"
+      required:
+        - id
+        - username
+        - email
+
+    UserCredentials:
+      type: object
+      properties:
+        password:
+          type: string
+          format: password
+          example: "password123"
+        username: 
+           type: string
+           description: "can correspond to username or email" 
+      required:
+        - password
+        - username
+
+    SignupRequest:
+      type: object
+      properties:
+        username:
+          type: string
+          example: "new_player"
+        email:
+          type: string
+          format: email
+          example: "new_player@example.com"
+        password:
+          type: string
+          format: password
+          example: "securePass123"
+      required:
+        - username
+        - email
+        - password
+
+    GameSettings:
+      type: object
+      properties:
+        boardWidth:
+          type: integer
+          example: 20
+        boardHeight:
+          type: integer
+          example: 20
+        initialSpeed:
+          type: integer
+          description: Initial game speed in milliseconds (lower is faster)
+          example: 150
+        speedIncrement:
+          type: integer
+          description: Amount to decrease delay by per difficulty level
+          example: 5
+        pointsPerFood:
+          type: integer
+          example: 10
+      required:
+        - boardWidth
+        - boardHeight
+        - initialSpeed
+
+    LeaderboardEntry:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        username:
+          type: string
+          example: "pro_player"
+        score:
+          type: integer
+          example: 1250
+        gamesPlayed:
+          type: integer
+          example: 42
+      required:
+        - id
+        - username
+        - score
+        - gamesPlayed
+
+    WatchingPlayer:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        username:
+          type: string
+          example: "spectator1"
+        watching:
+          type: string
+          description: Username of the player being watched
+          example: "pro_player"
+        isLive:
+          type: boolean
+          example: true
+      required:
+        - id
+        - username
+        - isLive
+
+    GameStartResponse:
+      type: object
+      properties:
+        gameId:
+          type: string
+          example: "a1b2c3d4"
+        gameMode:
+          type: string
+          enum: [walls, pass-through]
+          example: "walls"
+        startedAt:
+          type: string
+          format: date-time
+          example: "2023-10-27T10:00:00Z"
+      required:
+        - gameId
+        - gameMode
+        - startedAt
+
+    ScoreSubmission:
+      type: object
+      properties:
+        userId:
+          type: integer
+          example: 1
+        gameId:
+          type: string
+          example: "a1b2c3d4"
+        score:
+          type: integer
+          example: 150
+        gameMode:
+          type: string
+          enum: [walls, pass-through]
+          example: "walls"
+        endedAt:
+          type: string
+          format: date-time
+          example: "2023-10-27T10:05:00Z"
+      required:
+        - userId
+        - gameId
+        - score
+        - gameMode
+        - endedAt
+
+    UpdateLeaderboardRequest:
+      type: object
+      properties:
+        userId:
+          type: integer
+          example: 1
+        score:
+          type: integer
+          example: 150
+      required:
+        - userId
+        - score
+
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Invalid credentials"
+      required:
+        - message
+
+  securitySchemes:
+    # Assuming standard Bearer auth for future implementation, though currently mock doesn't strictly enforce tokens
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+paths:
+  /auth/login:
+    post:
+      summary: User Login
+      description: Authenticates a user and returns their profile (excluding password).
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email: 
+                   type: string
+                username:
+                   type: string
+                password:
+                   type: string
+              # One of email or username is required alongside password
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /auth/signup:
+    post:
+      summary: User Signup
+      description: Registers a new user.
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignupRequest'
+      responses:
+        '201':
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '409':
+          description: User already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /game/settings:
+    get:
+      summary: Get Game Settings
+      description: Retrieve configuration for the game board and difficulty.
+      tags: [Game]
+      responses:
+        '200':
+          description: Game settings retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GameSettings'
+
+  /game/start:
+    post:
+      summary: Start New Game
+      description: Initializes a new game session.
+      tags: [Game]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                gameMode:
+                  type: string
+                  enum: [walls, pass-through]
+      responses:
+        '200':
+          description: Game started
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GameStartResponse'
+
+  /game/score:
+    post:
+      summary: Submit Game Score
+      description: Submits the final score of a game.
+      tags: [Game]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ScoreSubmission'
+      responses:
+        '200':
+          description: Score submitted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+
+  /leaderboard:
+    get:
+      summary: Get Leaderboard
+      description: Retrieves the top scores.
+      tags: [Leaderboard]
+      responses:
+        '200':
+          description: Leaderboard retrieved
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LeaderboardEntry'
+    post:
+      summary: Update Leaderboard
+      description: Updates the leaderboard with a new score if it qualifies.
+      tags: [Leaderboard]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateLeaderboardRequest'
+      responses:
+        '200':
+          description: Leaderboard updated
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LeaderboardEntry'
+
+  /watching/players:
+    get:
+      summary: Get Watching Players
+      description: Retrieves a list of spectators and who they are watching.
+      tags: [Watching]
+      responses:
+        '200':
+          description: List of watching players
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WatchingPlayer'
+
+  /watching/{playerId}/start:
+    post:
+      summary: Start Watching a Player
+      description: Sets a spectator to start watching a specific target player.
+      tags: [Watching]
+      parameters:
+        - in: path
+          name: playerId
+          schema:
+            type: integer
+          required: true
+          description: ID of the spectator (or player to watch depending on specific logic, assumed to be target here)
+      responses:
+        '200':
+          description: Started watching
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WatchingPlayer'
+        '404':
+          description: Player not found
+
+  /watching/{playerId}/stop:
+    post:
+      summary: Stop Watching a Player
+      description: Stops watching a specific player.
+      tags: [Watching]
+      parameters:
+        - in: path
+          name: playerId
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: Stopped watching
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WatchingPlayer'
+        '404':
+          description: Player not found

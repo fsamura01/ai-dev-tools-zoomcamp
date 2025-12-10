@@ -1,0 +1,87 @@
+{
+  "users": [
+    {
+      "id": 1765379776176,
+      "username": "testuser",
+      "email": "test@example.com",
+      "password": "$2b$10$Zyfh84EFDA7ns0to1VgtFOUrSJHHDdq48YGoUm5SD9dRuHCoelQOe"
+    }
+  ],
+  "games": [
+    {
+      "gameId": "6a399ab3-e557-416a-a855-97b8856a744d",
+      "gameMode": "walls",
+      "startedAt": "2025-12-10T15:16:16.318Z",
+      "status": "active"
+    },
+    {
+      "gameId": "398e9a2a-b051-4499-a07b-0fe7178fd008",
+      "gameMode": "walls",
+      "startedAt": "2025-12-10T15:43:52.542Z",
+      "status": "active"
+    },
+    {
+      "gameId": "4b686901-03cd-4bdd-9c4c-ccda0bd4eaec",
+      "gameMode": "walls",
+      "startedAt": "2025-12-10T15:47:43.370Z",
+      "status": "active"
+    },
+    {
+      "gameId": "f401816b-c056-48a5-91e6-c91de237adf3",
+      "gameMode": "pass-through",
+      "startedAt": "2025-12-10T16:49:18.811Z",
+      "status": "active"
+    },
+    {
+      "gameId": "324d34ff-f5c0-4131-ab17-e15fabfe2abd",
+      "gameMode": "pass-through",
+      "startedAt": "2025-12-10T16:51:28.870Z",
+      "status": "active"
+    },
+    {
+      "gameId": "86a1cac9-5516-4081-ab35-bbf896502f39",
+      "gameMode": "pass-through",
+      "startedAt": "2025-12-10T16:53:49.904Z",
+      "status": "active"
+    },
+    {
+      "gameId": "63639010-798b-4e36-89d9-d914bdd6d837",
+      "gameMode": "pass-through",
+      "startedAt": "2025-12-10T16:54:00.677Z",
+      "status": "active"
+    },
+    {
+      "gameId": "f76a1533-baaa-45e7-8f47-ca1088006fce",
+      "gameMode": "pass-through",
+      "startedAt": "2025-12-10T16:54:05.843Z",
+      "status": "active"
+    }
+  ],
+  "scores": [
+    {
+      "id": 1765379776341,
+      "userId": 1765379776176,
+      "gameId": "6a399ab3-e557-416a-a855-97b8856a744d",
+      "score": 100,
+      "gameMode": "walls",
+      "endedAt": "2025-12-10T15:16:16+00:00"
+    },
+    {
+      "id": 1765381432561,
+      "userId": 1765379776176,
+      "gameId": "398e9a2a-b051-4499-a07b-0fe7178fd008",
+      "score": 100,
+      "gameMode": "walls",
+      "endedAt": "2025-12-10T15:43:52+00:00"
+    }
+  ],
+  "leaderboard": [],
+  "watching": [
+    {
+      "id": 1765381432579,
+      "spectatorId": 1765379776176,
+      "targetId": 1765379776176,
+      "startedAt": "2025-12-10T15:43:52.579Z"
+    }
+  ]
+}
