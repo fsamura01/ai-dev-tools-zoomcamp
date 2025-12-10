@@ -42,7 +42,10 @@ app.get('/health', (req, res) => {
 });
 
 // Serve static files in production
-const clientBuild = path.join(__dirname, '../../client/dist');
+// In Docker, we run from /app and the client build is at /app/client/dist
+const clientBuild = process.env.NODE_ENV === 'production' 
+  ? path.join(process.cwd(), 'client/dist')
+  : path.join(__dirname, '../../client/dist');
 app.use(express.static(clientBuild));
 
 app.get('*', (req, res) => {
