@@ -25,6 +25,7 @@ A real-time collaborative coding interview platform supporting JavaScript and Py
    ```bash
    npm run dev
    ```
+   This command uses `concurrently` to run both the client (Vite) and server (Node/Express) in a single terminal.
    Access client at `http://localhost:5173`. Server runs on `http://localhost:3000`.
 
 ### Testing
