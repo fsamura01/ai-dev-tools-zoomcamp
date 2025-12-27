@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: coding-interview-platform
+    env: docker
+    plan: free
+    branch: main
+    envVars:
+      - key: PORT
+        value: 3000
+    # Keep strictly 1 instance because we are using in-memory sessions
+    numInstances: 1

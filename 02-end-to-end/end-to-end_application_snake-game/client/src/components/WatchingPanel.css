@@ -1,0 +1,116 @@
+.watching-panel {
+  background-color: #1a1a1a;
+  border-radius: 8px;
+  padding: 1rem;
+  height: fit-content;
+}
+
+.watching-panel h2 {
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+.watching-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.watching-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem;
+  background-color: #242424;
+  border-radius: 4px;
+}
+
+.player-info {
+  flex: 1;
+}
+
+.player-name {
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+}
+
+.player-status {
+  font-size: 0.9rem;
+  color: #888;
+}
+
+.target-player {
+  color: #646cff;
+  font-weight: 500;
+}
+
+.watching-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.status-indicator {
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.status-indicator.live {
+  background-color: rgba(255, 0, 0, 0.2);
+  color: #ff6b6b;
+  border: 1px solid #ff6b6b;
+}
+
+.status-indicator.offline {
+  background-color: rgba(128, 128, 128, 0.2);
+  color: #888;
+  border: 1px solid #888;
+}
+
+.watch-button {
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  border: none;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.watch-button.start {
+  background-color: #646cff;
+  color: white;
+}
+
+.watch-button.start:hover {
+  background-color: #535bf2;
+}
+
+.watch-button.stop {
+  background-color: #ff6b6b;
+  color: white;
+}
+
+.watch-button.stop:hover {
+  background-color: #ff5252;
+}
+
+.no-data {
+  text-align: center;
+  padding: 1rem;
+  color: #888;
+}
+
+.watching-note {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  background-color: #242424;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  color: #888;
+}
+
+.watching-note p {
+  margin: 0;
+}
