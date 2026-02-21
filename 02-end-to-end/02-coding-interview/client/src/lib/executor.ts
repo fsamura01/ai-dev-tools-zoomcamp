@@ -53,11 +53,42 @@ const runJavascript = (code: string): Promise<string> => {
 
     (iframe.contentWindow as any)?.eval(`
       const logs = [];
-      const oldLog = console.log;
-      console.log = (...args) => logs.push(args.join(' '));
+      const stringify = (val) => {
+        if (val instanceof Map) {
+          const entries = Array.from(val.entries())
+            .map(([k, v]) => stringify(k) + '=>' + stringify(v))
+            .join(', ');
+          return '{ ' + entries + ' }';
+        }
+        if (val instanceof Set) {
+          const items = Array.from(val).map(stringify).join(', ');
+          return 'Set { ' + items + ' }';
+        }
+        if (typeof val === 'string') {
+          return '"' + val + '"';
+        }
+        if (typeof val === 'object' && val !== null) {
+          if (Array.isArray(val)) {
+             return '[' + val.map(stringify).join(', ') + ']';
+          }
+          try {
+            const entries = Object.entries(val)
+              .map(([k, v]) => k + ': ' + stringify(v))
+              .join(', ');
+            return '{ ' + entries + ' }';
+          } catch (e) {
+            return String(val);
+          }
+        }
+        return String(val);
+      };
+      console.log = (...args) => logs.push(args.map(stringify).join(' '));
+      console.error = (...args) => logs.push('ERROR: ' + args.map(stringify).join(' '));
+      console.warn = (...args) => logs.push('WARN: ' + args.map(stringify).join(' '));
+      
       try {
         const result = eval(${JSON.stringify(code)});
-        const output = logs.join('\\n') + (logs.length > 0 && result !== undefined ? '\\n' : '') + (result !== undefined ? String(result) : '');
+        const output = logs.join('\\n') + (logs.length > 0 && result !== undefined ? '\\n' : '') + (result !== undefined ? stringify(result) : '');
         parent.postMessage({ output }, '*');
       } catch(e) {
         parent.postMessage({ error: e.toString() }, '*');
